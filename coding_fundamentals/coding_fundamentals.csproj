@@ -1,0 +1,269 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E5C29754-09FE-4582-A859-2EC7A2C0A6A9}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>coding_fundamentals</RootNamespace>
+    <AssemblyName>coding_fundamentals</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Advanced_C_Sharp\ExpressionTree\ExpressionClient.cs" />
+    <Compile Include="Advanced_C_Sharp\ExpressionTree\Sessions\Learnings.cs" />
+    <Compile Include="DSA\Graph\GraphClient.cs" />
+    <Compile Include="DSA\Graph\GraphNode.cs" />
+    <Compile Include="DSA\Heap\MaxHeap\MaxHeap.cs" />
+    <Compile Include="DSA\Queue\KQueues.cs" />
+    <Compile Include="DSA\Stack\NStack.cs" />
+    <Compile Include="DSA\Tree\BST\BSTCreation.cs" />
+    <Compile Include="DSA\Tree\BST\BST_to_DLL.cs" />
+    <Compile Include="DSA\Tree\BST\Misc.cs" />
+    <Compile Include="DSA\Tree\Construct Tree\PreOrder_Inorder.cs" />
+    <Compile Include="DSA\Tree\Construct Tree\Tree.cs" />
+    <Compile Include="DSA\Tree\Misc Problems\Misc.cs" />
+    <Compile Include="DSA\Tree\Traversals\TreeTarversals.cs" />
+    <Compile Include="DSA\Tree\TreeNode.cs" />
+    <Compile Include="DSA\Tree\Views\TreeViews.cs" />
+    <Compile Include="DSA\Tries\Trie.cs" />
+    <Compile Include="DSA\Tries\TrieNode.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Command Pattern\AppliancesSetup\AbstractCommand\ICommand.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Command Pattern\AppliancesSetup\CommandClient.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Command Pattern\AppliancesSetup\CommandQueueWithUndo.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Command Pattern\AppliancesSetup\Command\FanOnCommand.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Command Pattern\AppliancesSetup\Command\LightOffCommand.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Command Pattern\AppliancesSetup\Command\LightOnCommand.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Command Pattern\AppliancesSetup\Command\MusicPlayCommand.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Command Pattern\AppliancesSetup\Invoker\Panel.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Command Pattern\AppliancesSetup\Receiver\Light.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Command Pattern\AppliancesSetup\Receiver\Receivers.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\CoR\Quize Game\Abstract Handler\IParticipant.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\CoR\Quize Game\Abstract Models\IQuestion.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\CoR\Quize Game\Handlers\Participant.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\CoR\Quize Game\Models\Question.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\CoR\Quize Game\QuizHost.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\CoR\SuppotHandlerDemo\Client.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\CoR\SuppotHandlerDemo\ConcreteHandler\HighLevelSupport.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\CoR\SuppotHandlerDemo\ConcreteHandler\LowLevelSupport.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\CoR\SuppotHandlerDemo\ConcreteHandler\MidLevelSupport.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\CoR\SuppotHandlerDemo\Handler\SupportHandler.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Interpreter\NumbersExpression\AbstractInterpreter\IExpression.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Interpreter\NumbersExpression\ExpressionClient.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Interpreter\NumbersExpression\Non-TerminalExpression\AddExpression.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Interpreter\NumbersExpression\Non-TerminalExpression\SubtractExpression.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Interpreter\NumbersExpression\TerminalExpression\NumberExpression.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Iterator Pattern\Airforce Iterator\Abstract AggregateElements\IAircraft.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Iterator Pattern\Airforce Iterator\Abstract Aggregate\IAirforce.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Iterator Pattern\Airforce Iterator\Abstract Iterator\ICustomIterator.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Iterator Pattern\Airforce Iterator\AggregateElements\Chopper.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Iterator Pattern\Airforce Iterator\AggregateElements\FighterJet.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Iterator Pattern\Airforce Iterator\AggregateElements\Transport.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Iterator Pattern\Airforce Iterator\Aggregate\Airforce.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Iterator Pattern\Airforce Iterator\AirforceIteratorClient.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Iterator Pattern\Airforce Iterator\Iterator\AirForceIterator.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Iterator Pattern\Custom Iterator\Abstract Aggregate\IAggregate.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Iterator Pattern\Custom Iterator\Abstract Iterator\IIterator.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Iterator Pattern\Custom Iterator\Aggregate\Aggregate.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Iterator Pattern\Custom Iterator\IteratorClient.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Iterator Pattern\Custom Iterator\Iterator\Iterator.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Mediator\ATC\AbstractMediator\IAirTrafficControl.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Mediator\ATC\ATCHost.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Mediator\ATC\Colleague\Aircraft.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Mediator\ATC\Infrstructure\Runway.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Mediator\ATC\Mediator\AirTrafficControlTower.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Mediator\ChatRoom\ChatRoomHost.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Mediator\ChatRoom\Colleague\User.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Mediator\ChatRoom\ConcreteMediator\ChatRoom.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Mediator\ChatRoom\MediatorInterface\IChatRoomMediator.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Observer\StockExchange\ConcreteObserver\StockAnalyst.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Observer\StockExchange\ConcreteSubject\StockMarket.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Observer\StockExchange\Observer\IStockAnalyst.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Observer\StockExchange\StockExchangeClient.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Observer\StockExchange\Subject\IStockMarket.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Strategy\Context\PaymentContext.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Strategy\Strategies\CreditCardPayment.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Strategy\Strategies\PayPalPayment.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Strategy\StrategyClient.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Strategy\StrategyInterface\IPaymentStrategy.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Visitor\DocumentsVisitor\AbstractElement\IDocument.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Visitor\DocumentsVisitor\AbstractVisitor\IDocumentVisitor.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Visitor\DocumentsVisitor\Element\PDFDocument.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Visitor\DocumentsVisitor\Element\WordDocument.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Visitor\DocumentsVisitor\VisitorClient.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Visitor\DocumentsVisitor\Visitor\DocumentPrinter.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Visitor\DocumentsVisitor\Visitor\DocumentSaver.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Visitor\Double Dispatch Issue\KnightDragonExample\DoubleDispatchClient.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Visitor\Double Dispatch Issue\KnightDragonExample\Dragon.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Visitor\Double Dispatch Issue\KnightDragonExample\Entity.cs" />
+    <Compile Include="LLD\Design Patterns\Behavioral Patterns\Visitor\Double Dispatch Issue\KnightDragonExample\Knight.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\Car Factory\Abstract Factory\IVehicleFactory.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\Car Factory\Abstract Products\IEngine.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\Car Factory\Abstract Products\ITyre.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\Car Factory\Abstract Products\IVehicle.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\Car Factory\CarFactoryClient.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\Car Factory\Factory\BikeFactory.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\Car Factory\Factory\CarFactory.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\Car Factory\Products\Bike\Bike.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\Car Factory\Products\Bike\BikeEngine.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\Car Factory\Products\Bike\BikeTyre.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\Car Factory\Products\Car\Car.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\Car Factory\Products\Car\CarEngine.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\Car Factory\Products\Car\CarTyre.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Abstract Factories\IDocumentPrinterFactory.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Abstract Factories\IPrinterMaterialFactory.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Abstract Products\Document\IDocument.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Abstract Products\Material\IInk.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Abstract Products\Material\IPaper.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Abstract Products\Printer\IPrinter.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\AbstractFactoryClient.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Factories\DocumentPrinterFactory\PDFInkjetPrinterFactory.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Factories\DocumentPrinterFactory\WordLaserPrinterFactory.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Factories\PrinterMaterialFactory\InkjetPrinterMaterialFactory.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Factories\PrinterMaterialFactory\LaserPrinterMaterialFactory.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Products\Documents\PDFDocument.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Products\Documents\WordDocument.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Products\Material\A4Paper.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Products\Material\BlackInk.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Products\Material\ColorInk.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Products\Material\LetterPaper.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Products\Printer\InkjetPrinter.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Products\Printer\LaserPrinter.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Utilities\Extensions.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Abstract Factory\DocumentPrinter\Utilities\Helper.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Builder Pattern\Car Builder\BuilderClient.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Builder Pattern\Car Builder\Builder\ICarBuilder.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Builder Pattern\Car Builder\Concrete Builder\CarBuilder.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Builder Pattern\Car Builder\Director\CarDirector.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Builder Pattern\Car Builder\Product\Car.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Factory\Car Factory\Abstract Factory\IVehicleFactory.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Factory\Car Factory\Abstract Product\IVehicle.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Factory\Car Factory\FactoryClient.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Factory\Car Factory\Factory\BikeFactory .cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Factory\Car Factory\Factory\CarFactory.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Factory\Car Factory\Product\Bike.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Factory\Car Factory\Product\Car.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Factory\DocumentFactory\Abstract Factory\DocumentFactory.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Factory\DocumentFactory\Abstract Product\IDocument.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Factory\DocumentFactory\FactoryClient.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Factory\DocumentFactory\Factory\PdfDocumentFactory.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Factory\DocumentFactory\Factory\WordDocumentFactory.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Factory\DocumentFactory\Product\PdfDocument.cs" />
+    <Compile Include="LLD\Design Patterns\Creational Patterns\Factory\DocumentFactory\Product\WordDocument.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Constants\_ENUMS.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Interface\Account\Account.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Interface\Parking Spot\ParkingSpot.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Interface\Payment\Payment.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Interface\Vehicle\Vehicle.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Account\Admin.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Account\ParkingAttendant.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Infrastructure\DisplayBoard\DisplayBoard.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Infrastructure\Gates\Entrance.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Infrastructure\Gates\Exit.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Parking Spots\Compact.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Parking Spots\Handicapped.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Parking Spots\Large.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Parking Spots\Mototrcycle.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Parking Ticket\ParkingTicket.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\ParkingLotSystem\ParkingLotSystem.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\ParkingRate\ParkingRate.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Payment\CardPayment.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Payment\CashPayment.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Vehicles\Bike.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Vehicles\Car.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Vehicles\Truck.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\Models\Vehicles\Van.cs" />
+    <Compile Include="LLD\Design Probelms LLD\Parking Lot System\ParkingLotSystemClient.cs" />
+    <Compile Include="MultiThreading\ProducerConnsumer\PCP.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="1 SOLID\1 SingleResponsibility\.gitkeep" />
+    <None Include="1 SOLID\2 OpenClosedPrinciple\.gitkeep" />
+    <None Include="1 SOLID\3 Liskov Substituion\.gitkeep" />
+    <None Include="1 SOLID\4 Interface Segeregation\.gitkeep" />
+    <None Include="1 SOLID\5 Dependency Inversion\.gitkeep" />
+    <None Include="App.config" />
+    <None Include="DSA\Algos\Sliding Winows\.gitkeep" />
+    <None Include="DSA\Algos\Tortoise Algo\.gitkeep" />
+    <None Include="DSA\Algos\Two Pointers\.gitkeep" />
+    <None Include="DSA\Arrays\.gitkeep" />
+    <None Include="DSA\Backracking\.gitkeep" />
+    <None Include="DSA\Bits Manipulations\.gitkeep" />
+    <None Include="DSA\DP\.gitkeep" />
+    <None Include="DSA\DSA Maths\.gitkeep" />
+    <None Include="DSA\Hashing\.gitkeep" />
+    <None Include="DSA\LL\.gitkeep" />
+    <None Include="DSA\Map\.gitkeep" />
+    <None Include="DSA\Recursion\.gitkeep" />
+    <None Include="DSA\String\.gitkeep" />
+    <None Include="LLD\Design Patterns\Behavioral Patterns\Interpreter\NumbersExpression\Context\.gitkeep" />
+    <None Include="LLD\Design Patterns\Behavioral Patterns\Interpreter\SQLQueryExpression\AbstractExpression\.gitkeep" />
+    <None Include="LLD\Design Patterns\Behavioral Patterns\Interpreter\SQLQueryExpression\Context\.gitkeep" />
+    <None Include="LLD\Design Patterns\Behavioral Patterns\Interpreter\SQLQueryExpression\Non-TerminalExpression\.gitkeep" />
+    <None Include="LLD\Design Patterns\Behavioral Patterns\Interpreter\SQLQueryExpression\TerminalExpression\.gitkeep" />
+    <None Include="LLD\Design Patterns\Behavioral Patterns\Memento\.gitkeep" />
+    <None Include="LLD\Design Patterns\Behavioral Patterns\State\.gitkeep" />
+    <None Include="LLD\Design Patterns\Behavioral Patterns\TemplateMethod\.gitkeep" />
+    <None Include="LLD\Design Patterns\Creational Patterns\Prototype\.gitkeep" />
+    <None Include="LLD\Design Patterns\Creational Patterns\Singleton\.gitkeep" />
+    <None Include="LLD\Design Patterns\Structural Patterns\Adaptor\.gitkeep" />
+    <None Include="LLD\Design Patterns\Structural Patterns\Bridge\.gitkeep" />
+    <None Include="LLD\Design Patterns\Structural Patterns\Composite\.gitkeep" />
+    <None Include="LLD\Design Patterns\Structural Patterns\Decorator\.gitkeep" />
+    <None Include="LLD\Design Patterns\Structural Patterns\Facade\.gitkeep" />
+    <None Include="LLD\Design Patterns\Structural Patterns\Flyweight\.gitkeep" />
+    <None Include="LLD\Design Patterns\Structural Patterns\Proxy\.gitkeep" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DSA\Heap\MaxHeap\heap.cpp" />
+    <Content Include="LLD\Design Patterns\Behavioral Patterns\Mediator\Mediator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Mediator1.txt</LastGenOutput>
+    </Content>
+    <Content Include="LLD\Design Patterns\Behavioral Patterns\Mediator\Mediator.txt" />
+    <Content Include="LLD\Design Patterns\Behavioral Patterns\Mediator\Mediator1.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Mediator.tt</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

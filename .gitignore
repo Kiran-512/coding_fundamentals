@@ -1,0 +1,39 @@
+# Ignore build results
+bin/
+obj/
+Debug/
+Release/
+*.dll
+*.exe
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vscode/
+
+# Ignore IDE-specific files
+.vs/
+*.csproj.user
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore NuGet packages
+packages/
+*.nupkg
+
+# Ignore Rider IDE files
+.idea/
+
+# Ignore publish output
+publish/
+
+# Ignore temporary files
+*.tmp
+*.swp
+*.bak
+*.orig
+*.old

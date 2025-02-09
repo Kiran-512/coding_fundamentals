@@ -1,0 +1,3 @@
+﻿
+The Mediator Pattern is used to reduce the complexity of communication between multiple objects or components.
+
