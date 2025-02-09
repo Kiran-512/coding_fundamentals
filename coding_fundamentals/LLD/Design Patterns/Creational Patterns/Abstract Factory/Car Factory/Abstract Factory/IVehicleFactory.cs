@@ -5,7 +5,7 @@ using System.Text;
 namespace All.Design.Patterns.LLD.Design_Patterns.Creational_Patterns.Abstract_Factory.Car_Factory
 {
     //The Abstract Factory defines the interface for creating families of related objects (vehicle, engine, and tire).
-    internal interface IVehicleFactory
+    interface IVehicleFactory
     {
         IVehicle CreateVehicle();
         IEngine CreateEngine();

@@ -15,7 +15,6 @@ namespace All.Design.Patterns.LLD.Design_Patterns.Creational_Patterns.Abstract_F
         {
             return new BikeTyre();
         }
-
         public IVehicle CreateVehicle()
         {
             return new Bike();
