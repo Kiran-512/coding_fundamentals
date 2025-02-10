@@ -1,0 +1,890 @@
+Covering OAuth 2.0, OpenID, PKCE, deprecated flows, JWTs, API Gateways, and scopes. No programming knowledge needed
+
+Aron Parecki :
+
+84 pages long oAuth 2.0 specs!
+
+Collection of dozen of specs!
+
+FlickrAuth frobs and tokens!
+
+2007 oAuth 1
+
+2012 oAuth 2
+
+
+----------------------------------------
+4 Major Roles : 
+User : Resource Owner
+Device : User Agent
+Application : Client : Third/First Party APP
+API : Resource server
+Authorization Server :
+
+User will always submit the password at the authorization server, and app will get back access token which it can use to make an api call
+API will validate that token from Auth Server!
+
+
+Authorization server and Resource server can be the same, can be diff and Authorization server can also be external one!
+
+------------------------------------
+Client Types
+1.Confidential Clients
+->has a client Credentials
+->Client Secret or Private KEY JWT OR Mutual TLS
+
+2.Public Clients
+Hacker can mimic the client and get the access token as Authorization server can not differentiate between the real client and fake client
+due to missing client secret!
+
+As a client Developer, the best i can do is make sure to choose the appropriate secrete type when I'm registering the application at the OAuth server and always make sure to safeguard client credentials if I have them!
+Never put a client secret into a mobile application or a single page application because then it wouldn't be secret anymore!
+
+--------------------------------
+User Consent :
+Purpose of OAuth : 
+-> Protech the users data and only share with them the user wants them to share with!
+
+
+POST https ://authz-server/token
+grant_type=password&
+username=USERNAME&
+password=PASSWORD&
+client_id=CLIENT_ID
+client_secret = CLIENT_SECRET (optional)
+
+As Authorization server, your job is to protect the resources, ensuring only applications and users that are authorized get access.
+
+In first party scenarios, user consent is skipped, as for such scenarios where user login to access the same service, no user consent is required!
+
+And if its a confidential client, then there's really no app impersonation risk either.
+
+so its safe to skip the consent feature and redirect back immediately!
+
+for Mobile and Single page app, even for first party app you can turn on user consent to avoid impersonation of your app by somebody else!
+
+--------------------------------
+Front Channel vs Back Channel!
+Back Channel : HTTPS, secure
+Front Channel : browsers address, not secure at all!
+Similar to a delivery guys!
+
+Secure way to get the Access token from OAuth server to the client is Back channel!
+
+in order to bring the user into the negotiation between client and auth server, front channel is used to transfer the access token even though its not secure!
+
+Front channel flow :
+1.Client needs to tell auth server, what it is trying to access, that's the first package being sent!
+This request will include the applications identifier, what scope its requesting etc.
+Client will redirect to the auth server with this information in the query string!
+2.Implicit flow works by using the front channel for both the request app makes, as well as delivering the access token!
+This is bad and insecure but browser didn't had any other option!
+3.No worries, this access token can be sent in a back channel, wherein app makes post request(AJAX or Fetch API for js app) to the auth server!
+4.In address bar, there risk as this data can be intercepted by anyone!
+Implicit flow is phased out by the OAuth!
+
+--------------------------------
+Application Identity!
+Access token from the back channel!
+- When client redirects the app to the auth server, auth server validate the credentials and send back Authorization code!
+- This code sent back to the client in front channel, and from back channel client makes post request to get the access token verifying its identity using client secret!
+- Mobile apps and Single Page apps can' be deployed with the client secret, so any app impersonating client can take this code and get the access token!
+
+Solution for these apps!
+PKCE : Proof Key for Code Exchange!
+
+Redirect URI : at this URI auth server sends the authorization code which app can use to redeem it by calling post method to auth server again thru the backend channel and verifying with its client secret!
+
+in case of mobile apps and Single page apps need to take case and consider the token lifetime and consent screen!
+
+redirect urls to be registered at the auth server to ensure auth server redirects to the registered redirect urls for a given client id!
+
+--------------------------------
+Assignment 1 : 
+
+In this exercise you'll sign up for an Auth0 developer account to follow along with the exercises. Once you have an account, you'll be able to create applications and configure your OAuth server to be able to follow along with the assignments.
+
+oAuth Developer Account
+https://oauth.school/exercise/introduction/
+
+Issuer URL :
+https://dev-ipm8cmi7cnvok03m.us.auth0.com/
+https://dev-ipm8cmi7cnvok03m.us.auth0.com/
+
+Authorization Endpoint:
+https://dev-ipm8cmi7cnvok03m.us.auth0.com/authorize
+https://dev-ipm8cmi7cnvok03m.us.auth0.com/authorize
+
+Token Endpoint:
+https://dev-ipm8cmi7cnvok03m.us.auth0.com/oauth/token
+https://dev-ipm8cmi7cnvok03m.us.auth0.com/oauth/token
+
+--------------------------------
+Registering the app at the auth server!
+1.Either self service registration
+2.Administration registration!
+Entering the redirect UR is the most important step in the registration step!
+Some servers might let you register more than one, but at least one is required!
+This redirect URI ensures that user is not sent back to the attackers website!
+Prevent the redirect urls with the wildcards/partial in it!
+
+IF THE Registration asked what type of app you're building and if you choose a mobile app, native app or a java script app, then chances are the registration process gave you back only CLIENT_ID and not the client secret!
+
+--------------------------------
+12. Authorization Code Flow for Web Applications
+Authorization code Injection attack :
+swapping of authorization code and logging into somebody else's account unknowingly!
+so PKCE is now recommended to use to avoid this attack, even for confidential clients!
+
+
+1.Before client sends user to oAuth server, it generates Random string called Code Verifier 43-128 characters long:
+2.Code Challenge (public hash)
+base64(sha256(code verifier))
+
+3.GET CALL from Client to Auth server
+GET /authorize?response_type=code&
+client_id=your-client-id&
+redirect_uri=https://your-app.com/callback&
+scope=read write profile email&
+state=xyz12345&
+code_challenge=hashed_code_verifier&
+code_challenge_method=S256
+HTTP/1.1
+Host: authorization-server.com
+
+4.
+HTTP/1.1 302 Found
+Location: https://your-app.com/callback?code=abc12345xyz&state=xyz12345
+
+HTTP/1.1 302 Found
+Location: https://your-app.com/callback?code=abc12345xyz&state=xyz12345
+
+5.POST Request from the client to OAuth server!
+POST /token HTTP/1.1
+Host: auth-server.com
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic Y2xpZW50X2lkOmNsaWVudF9zZWNyZXQ=
+grant_type=authorization_code&
+code=abc12345xyz&
+redirect_uri=https%3A%2F%2Fclient-app.com%2Fcallback
+
+Response from the Auth server :
+Passed :
+{
+  "access_token": "abcd12345xyz",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "xyz98765"
+}
+
+Failed : 
+{
+  "error": "invalid_request",
+  "error_description": "The authorization code is invalid or expired."
+}
+
+in case access token expired then :
+POST /token HTTP/1.1
+Host: auth-server.com
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic Y2xpZW50X2lkOmNsaWVudF9zZWNyZXQ=
+grant_type=refresh_token&
+refresh_token=xyz98765
+--------------------------------
+Assignment 2 : OAuth for Web Server Applications
+This exercise will walk you through the OAuth flow you would use if you are building a web server based application. The goal of this exercise is to use the authorization code flow with PKCE to get an access token.
+
+The goal of this exercise is to get an access token using the authorization code flow and PKCE as a confidential client. This exercise will walk you through the flow manually without writing any code. You are off course free to write code to do this instead if you’d like, but the instructions here will show you the step by step process of what’s happening under the hood.
+
+Please visit oauth.school/exercise/web for the complete instructions for this exercise.
+
+Questions for this assignment
+What did you learn from this exercise? (You can uncheck the “share answer with other students” checkbox)
+
+
+Code Verifier :
+12ccfa7ad587ddff2c2e0a29d679c4a4a17b95bc379c62b33de677e5
+
+Code Challenge :
+HOwCeZGbsG-dnMKsK7BsjI0r8KT-OgoGJnPNIoiRgkA
+
+Client Secret : 
+QWmOV1gSguMxBndPVUtbiKMyUatMK2f1TmP2IKlmgcSZBaI5E6csWOD3MyAanR2u
+
+Authorization Request : 
+https://dev-ipm8cmi7cnvok03m.us.auth0.com/authorize?response_type=code
+&client_id=JHFuG2HuTqR7LJdISqwEjZagaIx6R9vt
+&state=12ccfa7ad587ddff2c2e0a29d679c4a4a17b95bc379c62b33de677e5
+&redirect_uri=https://example-app.com/redirect
+&code_challenge=HOwCeZGbsG-dnMKsK7BsjI0r8KT-OgoGJnPNIoiRgkA
+&code_challenge_method=S256
+
+Great! You built the URL, now you're ready to go log in. Click the login link to be taken to the authorization server and log in
+
+Create the initial URL for the authorization request and paste it above. Once it's correct, a "Log In" button with that URL will appear below
+
+https://example-app.com/redirect?code=6YRGHsWNyqyHlPe1V3h3T7R7wazhcPmw5SUKrGPM_jkkf&state=12ccfa7ad587ddff2c2e0a29d679c4a4a17b95bc379c62b33de677e5
+
+--- Response
+The authorization server redirected you back to the app and issued an authorization code!
+
+You can exchange this authorization code for an access token now!
+
+Your app can read the authorization code and state from the URL, and they are printed below for your convenience as well.
+
+code=6YRGHsWNyqyHlPe1V3h3T7R7wazhcPmw5SUKrGPM_jkkf
+
+state=12ccfa7ad587ddff2c2e0a29d679c4a4a17b95bc379c62b33de677e5
+
+You should verify that the state parameter here matches the one you set at the beginning. Otherwise it's possible someone is trying to trick your app!
+---
+POST Request online : 
+https://reqbin.com/post-online
+JSON : 
+{
+    "url": "https://dev-ipm8cmi7cnvok03m.us.auth0.com/oauth/token",
+    "raw_url": "https://dev-ipm8cmi7cnvok03m.us.auth0.com/oauth/token",
+    "method": "post",
+    "headers": {
+        "Content-Type": "application/x-www-form-urlencoded"
+    },
+    "data": {
+        "grant_type": "authorization_code",
+        "redirect_uri": "https://example-app.com/redirect",
+        "client_id": "JHFuG2HuTqR7LJdISqwEjZagaIx6R9vt",
+        "client_secret": "QWmOV1gSguMxBndPVUtbiKMyUatMK2f1TmP2IKlmgcSZBaI5E6csWOD3MyAanR2u",
+        "code_verifier": "12ccfa7ad587ddff2c2e0a29d679c4a4a17b95bc379c62b33de677e5",
+        "code": "6YRGHsWNyqyHlPe1V3h3T7R7wazhcPmw5SUKrGPM_jkkf"
+    }
+}
+curl :
+curl -X POST https://dev-ipm8cmi7cnvok03m.us.auth0.com/oauth/token \
+  -d grant_type=authorization_code \
+  -d redirect_uri=https://example-app.com/redirect \
+  -d client_id=JHFuG2HuTqR7LJdISqwEjZagaIx6R9vt \
+  -d client_secret=QWmOV1gSguMxBndPVUtbiKMyUatMK2f1TmP2IKlmgcSZBaI5E6csWOD3MyAanR2u \
+  -d code_verifier=12ccfa7ad587ddff2c2e0a29d679c4a4a17b95bc379c62b33de677e5 \
+  -d code=6YRGHsWNyqyHlPe1V3h3T7R7wazhcPmw5SUKrGPM_jkkf
+
+
+Response :
+{
+    "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjE0UUx1QWhwNV8tWmJXQmNaLXdMaSJ9.eyJpc3MiOiJodHRwczovL2Rldi1pcG04Y21pN2Nudm9rMDNtLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExNTk0MjA2NDQyNTc3NDYwODU2MSIsImF1ZCI6Imh0dHBzOi8vYXBpLlNlY3VyZUFQSS5jb20vIiwiaWF0IjoxNzM3ODcyNDk3LCJleHAiOjE3Mzc5NTg4OTcsImF6cCI6IkpIRnVHMkh1VHFSN0xKZElTcXdFalphZ2FJeDZSOXZ0In0.L3Z08WRN9t6A_Ea7Hwaooh_QMo31iEFM5wbfWlH7MIQwATjkrIAlek9jjGXrzAh5GtbVZL0F0DV0UV539ynQtzk_3vdh-UuNsQjt5-CCod6s5dTQiGSy2Agf2hbmGXtLThbBhRGs-nMN7lhV_O40UVaF-hqKtdzpISiGHHAJaX6E9U5uxxJUGTVtgDJtW0H-dTcIPrNIzPjGQbopNAlhHdZo23cg7O0It6OExdXJ-RxJtb1gY5XLt2ORKXX7t-nKu3N3_BUzv_ePyg6s_QC6_CbZ7EKuKOygUmgdQFGtnZ2eitnh94gIiBHc5DhVmrUJcca9j9s9_UDog6gqRpjGnQ",
+    "expires_in": 86400,
+    "token_type": "Bearer"
+}
+
+Great! The access token is valid! You've completed this exercise!
+
+--------------------------------
+24. When to use the Client Credentials Grant
+
+When the same app is using the credentials to get the access token then password grant is used!
+This is used int the Machine to Machine communication : 
+
+eg.
+Accessing the resources on the same app using microservices, 
+Getting the report on how many users are using this app etc.!
+
+Google uses the Client Credentials grant to give apps a way to access backend storage APIs to store the data themselves!
+
+
+--------------------------------
+
+25. Client Credentials Grant for Machine-to-Machine Applications
+
+In case of password grant!!
+POST /token HTTP/1.1
+Host: auth-server.com
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic Y2xpZW50X2lkOmNsaWVudF9zZWNyZXQ= // Client_ID and Client_secret (post body)
+grant_type=password&
+username=johndoe&
+password=supersecretpassword&
+scope=read write
+
+since here's no user is present so there's not even need for refresh tokens as well!
+--------------------------------
+Assignment 5 : Getting an Access Token with the Client Credentials Grant
+
+https://oauth.school/exercise/service/
+
+Client id : MZ1el5G6MK3E61R25eAejwXArBxN8AiR
+Client secret : 0F0A5upctD7j9N5c4amTgtv9ulIkRtO2pMNAwJy64SebElaD2a9oO737TfH5JP5N
+The Client Secret is not base64 encoded.
+
+
+curl -X POST https://dev-ipm8cmi7cnvok03m.us.auth0.com/oauth/token \
+  -d grant_type=client_credentials \
+  -d client_id={YOUR_CLIENT_ID} \
+  -d client_secret={YOUR_CLIENT_SECRET}
+
+curl -X POST https://dev-ipm8cmi7cnvok03m.us.auth0.com/oauth/token \
+  -d grant_type=client_credentials \
+  -d client_id=MZ1el5G6MK3E61R25eAejwXArBxN8AiR \
+  -d client_secret=0F0A5upctD7j9N5c4amTgtv9ulIkRtO2pMNAwJy64SebElaD2a9oO737TfH5JP5N
+
+JSON :
+{
+        "grant_type": "client_credentials",
+        "client_id": "MZ1el5G6MK3E61R25eAejwXArBxN8AiR",
+        "client_secret": "0F0A5upctD7j9N5c4amTgtv9ulIkRtO2pMNAwJy64SebElaD2a9oO737TfH5JP5N"
+}
+
+Response : 
+{
+    "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjE0UUx1QWhwNV8tWmJXQmNaLXdMaSJ9.eyJpc3MiOiJodHRwczovL2Rldi1pcG04Y21pN2Nudm9rMDNtLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJNWjFlbDVHNk1LM0U2MVIyNWVBZWp3WEFyQnhOOEFpUkBjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9hcGkuU2VjdXJlQVBJLmNvbS8iLCJpYXQiOjE3Mzc4NzMyOTIsImV4cCI6MTczNzk1OTY5MiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiTVoxZWw1RzZNSzNFNjFSMjVlQWVqd1hBckJ4TjhBaVIifQ.YzWVx-f72g72AXMNl-Uq9mVhkMmqalg8v-b5P7IngUXdF04IxdktUURXe3sm3-V8J6Tll3o2iLtakOZjTz930hM8iQLeD8ppCtbsB_cz1Ow1b4evcCPzc1gZJiAPxFo2Phw7pvXCnWnyeuvLge3OXRf_u9qyzVMMUXUCyFMExtSqOuM-NKDEcm1LV2vssdbzP2ZP0xkI_685on5yp3kEqMzMSo2th13iY2b2FQXzO0g0BNQw22_yemWbl_YJefoURTScr1X9VZm0K5n3AWS53qQ_iGRRVgR0vma8o3GA8TdscdO8kUT2AlgivQLjdukl3BQV52sj-MsIB72yOwPuyQ",
+    "expires_in": 86400,
+    "token_type": "Bearer"
+}
+
+--------------------------------
+ASP.NET MVC project with Authorization ON creates below tables in the database:
+AspNetRoles
+AspNetUserClaims
+AspNetUserLogins
+AspNetUserRoles
+AspNetUsers
+
+--------------------------------
+OpenID Connect : 
+Extension of an OAuth
+Goal: Communicate Information about the users to the applications!
+OAuth : Applications accessing API's
+
+
+ID Token :
+is the way that authorization server communicates the information about the user just logged in to the application!
+
+It turns out that ID Tokens are always JSON web Tokens!
+
+JWT is a format of token that is used for ID Tokens!
+and sometimes OAuth servers also use that format for access tokens!
+
+Access tokens formats can be anything!
+but ID Token are always JWT tokens!
+
+JWT :
+HEADER : Info about the token : Base64Encoded
+PAYLOAD  : Data you care about : Base64Encoded
+SIGNATURE : How you can validate the token/this is made up of first two encodings and encryption
+
+HEADER : Info about the token : Base64Encoded
+{
+"kid": ""AdahsSdahsASdadahshsdahsDdahsAdahsDASdahsDAdahsASdahsHJFKKLEJGEKNEGEKGEGUINSsasasHBD==,
+"alg" : "RS256"
+}
+PAYLOAD  : Data you care about
+{
+"sub" : {userID}//Main - 
+"email":"{User_email}"
+"iss" :"{issuer}"
+"aud" : "{CLIENT_ID}"
+"iat" :
+"exp":
+"nonce":
+"auth_time":
+}
+SIGNATURE : How you can validate the token
+--------------------------------
+27. How ID Tokens are Different from Access Tokens
+Many servers use the same format for access token and ID tokens - JWT!
+
+Access tokens are Opaque to an applications!
+Application must not understand the access tokens, they can't see into them!
+ID Tokens are means to be used/read by the applications!
+
+when you open These two tokens, you see that these two tokens are means for the different audiences!
+Audience of the ID Token is Application!
+Audience of the Access Token is API/Resource server!
+--------------------------------
+28. Obtaining an ID Token
+
+HTTPS://AUTHORIZATION-SERVER.COM/AUTH?
+response_type=code
+&scope=photos+openid
+&client_id={CLIENT_ID}
+&redirect_uri={REDIRECT_URI}
+&state=asaftrbfs
+&nonce=103948
+&code_challenge={CODE_CHALLENEGE}
+&code_challenege_method=SHA256
+
+Response : 
+{
+"token_type" :""
+"access_token":""
+"id_toekn":""
+"expires_in":""
+}
+
+
+We can directly get the ID_Token without access token by replacing,
+response_type =id_token
+
+https://example-app.com/redirect$id_token=ertsfasfsfgreds...&state=xyzhdg
+
+Looks like a implict flow, where in oAuth return the token without the intermediate authorization code!
+
+Scopes :
+openid
+email
+profile -> name+photo
+address
+phone
+
+
+if its coming front he front channel signature is used to validate if its valid or not!
+--------------------------------
+29. Hybrid OpenID Connect Flows
+
+
+respone_types :
+code
+id_token
+code id_token
+token
+id_token token
+code token
+code token id_token
+
+response types with keyword "token" are deprecated as they are not safe, because getting the token from front channel is risky!
+
+for response_type = code_id_token
+one more claims will be returned in the response which is
+"c_hash" :"azzasdsda.." which in turn can be used to validate that the code is not swapped in the response and its from authorization server only!
+
+
+PKCE provides the authorization code injection protection but from the point of view of oAuth server!
+
+Recommendation :
+using PCKE even with the openID connect, and getting the ID Token and access token using the authorization code flow using the PKCE!
+
+True for confidential and public client where or not you have a client secret!
+--------------------------------
+30. Validating and Using an ID Token
+If you get the ID token either with the implicit flow or with the hybrid flow, its crucial to validate the same!
+
+Signature on ID Tokens is validated by using the private key which is hardcoded in the documentation!
+
+Get the key which is used to sign that token header, also check the algorithm in header!
+Post this claims inside the ID Token that still to be validated!
+
+
+Check Issuers : Should match with the issues you were expecting it from
+Check Aud - SHOULD MATCH WITH THE Client-ID
+"nonce" : should match with the nonce sent in the request!
+"amr" :
+{
+"pwd"//"two factor authentication"// etc.
+}
+
+Validating the signature and then rest claims is crucial to trust the token!
+
+--------------------------------
+31. Intro to Protecting an API with OAuth
+
+--------------------------------
+32. Reference Tokens vs Self-Encoded Tokens
+Random series of characters meaning nothing!
+and will contains the data but application wont be able to read that data and only API will be able to read it in order that application is given he access which holds this token!
+
+--------------------------------
+33. Pros and Cons of Reference Tokens
+
+PROS :
+Simple
+Easy to revoke, as its stored can be made inActive
+Token data is not visible with the token as token points to the data!
+
+CONS :
+- Must be stored as that token string does means anything!
+- API Requires network to validate that token from auth server!
+- Token Introspection, if data base access is not given to the API!
+--------------------------------
+34. Pros and Cons of Self-Encoded Tokens
+- Token contains the data
+- Token string means something!
+
+- Don't need to be stored!
+- Don't need network call to validate them!
+
+--------------------------------
+Assignment 7: Protecting an API Endpoint with Access Tokens
+This exercise will demonstrate how an API can validate access tokens and allow only authorized requests through.
+
+The goal of this exercise is to demonstrate how an API can validate access tokens issued by the authorization server. We won’t be writing any code, but everything we do in this exercise are steps you can translate to code when you’re ready.
+
+In order to complete this exercise, you’ll need a valid access token to mimic a request that an outside application would make. Go ahead and complete one of the earlier exercises to get a valid access token from your authorization server first. Come back here once you have an access token.
+
+Access Token :
+{
+    "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjE0UUx1QWhwNV8tWmJXQmNaLXdMaSJ9.eyJpc3MiOiJodHRwczovL2Rldi1pcG04Y21pN2Nudm9rMDNtLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJNWjFlbDVHNk1LM0U2MVIyNWVBZWp3WEFyQnhOOEFpUkBjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9hcGkuU2VjdXJlQVBJLmNvbS8iLCJpYXQiOjE3Mzc4ODE2OTUsImV4cCI6MTczNzk2ODA5NSwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwiYXpwIjoiTVoxZWw1RzZNSzNFNjFSMjVlQWVqd1hBckJ4TjhBaVIifQ.Q43ayGVKiGVbcVEeTvcXyvCY_QBRZjTG07hDXibJAX0mWOZ53R_Q5IrpPuXNYNQn-hNZHEHob022BMdxVQYRU3eJBmBHNzmlBqpYM4T73pJnDyy2R2GVsFEXMAyCXB-KeGwae4HfsQtSNnlJTFB87hjenB3PIOi_DW4DdCSi8kfHL84md6UKb_4musxZAL_JwxyjYuJlCNx0qH09szWyBUz3Rj6egnR8zpR5g_MDpOAqyTHD3MQcKTBSLDrLJif-nK65a1YQmFy46xAVhws0d78zuEdYW4Xub-9qGSyI-tThwhaRQheTapii2iCxst3xOXUzJ-3HA4ahfIKJlvscKw",
+    "expires_in": 86400,
+    "token_type": "Bearer"
+}
+
+First we need to define an API in Auth0. From the side menu, choose Applications and then APIs. Click the Create API button.
+
+API : Contacts
+https://contacts.example.com
+
+Now that the API is defined, it’s possible for your OAuth clients to request an access token for use at that API.
+
+You can get an access token for your API any way you choose, such as using your own OAuth client code, by repeating an earlier exercise from this course
+or 
+by using the OAuth client available at https://example-app.com/client. When you start the OAuth flow
+
+you’ll need to add a new parameter to the authorization request to indicate to Auth0 that you want an access token for your API. 
+
+You can do this by adding the “audience” parameter to your request, with the value you used as the Identifier when you defined the API in Auth0. Alternatively, you can define a default audience for your Auth0 org.
+
+#JWT format : Check if access token has three parts separated by two periods
+access_token : "hdsasgdsg.//headers
+		hfkjsdfhk.//payload
+		kjgkhyuds"//signature
+
+---- request
+Authorization URL
+https://dev-ipm8cmi7cnvok03m.us.auth0.com/authorize
+?response_type=code
+&client_id=7stboiPS3yYkNqBPytqkdUtah6BzFxr0
+&code_challenge=C0NVpsSTooINViZeMRf6ArfMFA3s68mtoAaqW9-3AYU
+&code_challenge_method=S256
+&state=ae40c1319dfe650af591
+&redirect_uri=https%3A%2F%2Fexample-app.com%2Fclient
+&audience=https%3A%2F%2Fcontacts.example.com
+
+redirect url : https://example-app.com/client for ClientID : 7stboiPS3yYkNqBPytqkdUtah6BzFxr0
+for this client we have registered the return url and it should match!
+
+---- response
+The authorization server redirected you back to the app and issued an authorization code!
+code=mSq5BQ8kpQIGouSTEINdtb-b0hJ5lPJGnjzAN33C-i5ZR
+state=ae40c1319dfe650af591
+
+Click the button below to make this POST request to the authorization server's token endpoint:
+
+POST https://dev-ipm8cmi7cnvok03m.us.auth0.com/oauth/token
+
+grant_type=authorization_code
+&code=mSq5BQ8kpQIGouSTEINdtb-b0hJ5lPJGnjzAN33C-i5ZR
+&code_verifier=6944c6fe1337f98fb0cbe6af4cf3cefa669470b2f8a7318028ba7dbbb0981e99e8e3f2e44ab3a2b0ad57aba3f806b232cc52
+&redirect_uri=https%3A%2F%2Fexample-app.com%2Fclient
+&client_id=7stboiPS3yYkNqBPytqkdUtah6BzFxr0
+
+---
+Token Response
+{
+    "access_token": 
+"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjE0UUx1QWhwNV8tWmJXQmNaLXdMaSJ9.
+eyJpc3MiOiJodHRwczovL2Rldi1pcG04Y21pN2Nudm9rMDNtLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDExNTk0MjA2NDQyNTc3NDYwODU2MSIsImF1ZCI6Imh0dHBzOi8vY29udGFjdHMuZXhhbXBsZS5jb20iLCJpYXQiOjE3Mzc4ODI2NDYsImV4cCI6MTczNzk2OTA0NiwiYXpwIjoiN3N0Ym9pUFMzeVlrTnFCUHl0cWtkVXRhaDZCekZ4cjAifQ.
+FleqMPRB_h06AejQrEotgBkSWtfMD1YgmaMhX_Vk3WrPIYN7JD-87NiUzWNoI9nXhFqdCXQf5d0ckorEROMvifG0ocuFRGLgMPaMjCmfmm50BQuJ376Q248XZwW3oEbuRtV19fc9yg4CmE7tTPkRuKt8kb2dDIDl297jeNpIoV5eWH2FwBGfYtKjt68QuBq7TNydmBJ6QTE8JzNEHZBUe69UCFfVlXsrl8s8hZHHz1JGgOQCLqza278dUtsN9WxLs5GhlRNekYp-YkhB0p48PB-LbJY-o-5YhoqfR46peAADRXHzzKIy6czFPxuJVW_QRi5-NYBJeC8QiapERTOg",
+    "expires_in": 86400,
+    "token_type": "Bearer"
+}
+
+Note that if you don’t include the “audience” in the request, then the access token you’ll get will be an access token intended to be read by Auth0’s own API, and will be in a different format, like the below:
+
+eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwiaXNzIjoiaHR0cHM6Ly9way1kZW1vLnVzLmF1dGgwLmNvbS8ifQ..oGBWfgk-yNvioM3C.--Gsl2LHBCnqQqNEqYYHLWJbpUEcKD6SV-x98jkGAAyHLyqFKKGmPwnB66Zp6mMBXg6d1UMUMlK3-xvIbO5wed3_gmHO8QBJhLO3ARUI6DL1WSXeBVSxWMYP7_EbvkIt-ujBPOziY4YjSJtw0flsPj8NzJXjKOmXwA4MTy2ijQ7X0m9ez5sD2U8ANDGsDPBaB-lGkq6UWpb32M3KNqCPjEOIrGmrl7K6riLSaX0-OpsVVjuvT5tzhylWIGcirELxjAZvFQtwNUds8kDCVE2UviScy_9FoBCGgwmobHTjnAJLJA.EpGqXRkpeOSor4HpsLE9UA
+
+Now you’re ready to try this out.
+
+An application will make a request to your API with an access token it obtained from the authorization server. The request to your API will be the first time your API sees this access token. The token will be sent by the client in the HTTP Authorization header. Your API needs to parse out this header and get the token string, then determine whether the token is valid.
+
+For this exercise, we’ll be using jwt.io to validate the access token signature.
+
+Paste the access token into jwt.io. As soon as you paste, the tool will fetch the public key of your Auth0 tenant by looking at the “iss” claim in the token itself. It will then use a JWT library to validate the signature, and you should see a “Signature Verified” checkmark.
+
+To see what happens if an application makes a request with an expired or otherwise invalid token, change a few characters of your access token claims or signature, and the validation should fail.
+
+In practice, you will use a JWT library to do this token validation in your API. You can find a list of JWT libraries and other helpful utilities linked from jwt.io.
+
+The JWT library will validate the signature and likely the expiration date as well. Depending on the library you use, you may be able to configure it to also validate the “iss” and “aud” claim. Some libraries will include this built in, but if not, then you will also need to validate these properties manually at your API. Your API should only accept access tokens with an “aud” value that match your API’s identifier. This ensures a user isn’t able to request an access token for one API and use it at an unrelated API.
+
+In a later exercise, we’ll talk about also validating the “scope” value in the access token.
+
+Questions for this assignment
+What are the advantages of validating access tokens this way?
+TTR : Because the access token is a JWT, your API can validate it without any additional network requests, reducing overall latency.
+MY -> 
+- no network call to auth server again similar for reference tokens
+- since its JWT, its a global standard, so we have standard libraries without warring about the issues in validations
+
+If the access token were not a JWT, how would your API be able to validate it?
+ANS : The API would need to make a request to the authorization server's introspection endpoint, adding latency to the API request from the client.
+my ans :
+->similar to JWT, the way we have encrypted it we will use the same way to decrypt the access token
+
+--------------------------------
+35. The Structure of a JWT Access Token
+Headers : Signing algo and which key is used for signing token!
+Payload : contain claims, which we can use to ensure that the payload is not tempered!
+Signature : encrypted string of mixed content of first two values
+{
+"iss":mandatory
+"exp":mandatory
+"iat":mandatory
+"aud":intended party who will be reading the token
+"sub":user Identidier , opaque string or email address / userId ? in case of client credential grants type,  
+"client_ip": client for which this token has been issued
+"jti":JWT ID - Unique identifier for this particular token which a resource server can use to 
+"scope":[ // optional
+	"offline_access",
+	"photo"
+]
+"auth_time":when last time user is authenticated
+"acr" :0, authentication context class reference
+"amr": "pwd"//how the user is authenticated eg. fingerprints/sms/otp
+}
+JSON Web Token (JWT) Profile for OAuth 2.0 Access Tokens
+--------------------------------
+36. Remote Token Introspection
+THE SLOW WAY!
+
+Only API should  be validating the access tokens!
+Client should use it to access the API's.
+API(post)->pass token ->auth server -> return valid or not! -SLOW WAY!
+
+if its a structured like JWT then no auth call is required to validate the token, as JWT token is validated with the signature on it!
+
+RFC7662 : OAuth2.0 token introspection!
+POST/ introspect
+Host: authserver.com
+token=XYZ
+
+token introspection endpoint will also require an authentication!
+
+--------------------------------
+37. Local Token Validation
+The fast way :
+
+algo : none,  algo must not be used in the header JWT!
+before verifying the signature the payload is untrusted!
+RS256 Asymmetric algo
+HS256 Symmetric algo
+
+JWT suggests that oauth server should publish their metadata url which contains claims like issueURL, authorizationendpoint etc. on it or either in the docs
+
+When a client sends a GET request to the discovery endpoint (typically at a URL like https://example.com/.well-known/openid-configuration), the server will respond with a JSON document that describes the OpenID Connect provider's configuration. The HTTP response usually has a status code of 200 OK and a Content-Type header set to application/json.
+
+{
+  "issuer": "https://example.com",
+  "authorization_endpoint": "https://example.com/oauth2/authorize",
+  "token_endpoint": "https://example.com/oauth2/token",
+  "jwks_uri": "https://example.com/.well-known/jwks.json",
+  "response_types_supported": [
+    "code",
+    "id_token",
+    "code id_token"
+  ],
+  "response_modes_supported": [
+    "query",
+    "form_post"
+  ],
+  "grant_types_supported": [
+    "authorization_code",
+    "refresh_token",
+    "client_credentials"
+  ],
+  "scopes_supported": [
+    "openid",
+    "profile",
+    "email",
+    "address",
+    "phone",
+    "offline_access"
+  ],
+  "token_endpoint_auth_methods_supported": [
+    "client_secret_basic"
+  ]
+}
+
+jwks :
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "alg": "RS256",
+      "kid": "123abc",
+      "use": "sig",
+      "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78...",
+      "e": "AQAB"
+    },
+    {
+      "kty": "EC",
+      "alg": "ES256",
+      "kid": "456def",
+      "use": "sig",
+      "crv": "P-256",
+      "x": "weNJy2HscCSM6AEDTDg04biOvhFhyyWvOHQfeF_PxMQ",
+      "y": "u5Nm_qtBzU4uQqLmK1gZVz3oR4Qb5QzFZ8I9gC6p6Tc"
+    }
+  ]
+
+--------------------------------
+38. The Best of Both Worlds: Using an API Gateway
+
+too much latency
+or 
+out of date validation
+
+
+API Gateway : First line of defense!
+Does the local validations!
+
+Particular API Methods needs additional security so those needs to be validated even after the local validations!
+eg. Payment API, credit card txn etc.
+
+Middleware can also do the fast local validations and some api which might need extra security can do the validation again!
+
+
+--------------------------------
+39. Increasing Security with Short Token Lifetimes
+more security -> keep short access token life time!
+if token is leaked, by reducing the life time, dev control this!
+
+unlimited access tokens are the most risky!
+--------------------------------
+40. Improving User Experience with Long Token Lifetimes
+Short access token : bad user Experience
+-> if its 10 minutes then every time minutes request will be made for the new access token!
+
+Access Token Life Time: ATLT
+
+for SPA, ATLT SHOULD BE LONG AS COST OF GETTING NEW TOEKN IS REFRESHING THE entire page!
+
+--------------------------------
+41. Contextually Choosing Token Lifetimes
+set up life time for the tokens based on the client id
+AT : 1 hours
+RT : 24 hours
+
+Consumer Users 
+AT : 24 hours
+RT : unlimited
+
+
+Privileged Scopes : 
+AT : 4 hours here AT has some scopes,so when user logged in and come back agter 10 days and add some items in the cart and go for checkout then if the scope exists in the AT, then that okay else it should redirect user to the new access token!
+RT : None
+
+--------------------------------
+42. Reasons Why an Access Token May become Invalidated
+Account Deactivation!
+
+43. The Problem with Local Validation
+in case access token is revoked then with local validation that access token will get passed!
+
+There's no solution this with revoked tokens validation locally!
+
+for critical API remote call is recommended and for non critical API local validation of access token is okay!
+
+44. Token Lifetime Considerations
+
+45. How Applications can Revoke Access Tokens
+https://auth-server.com/revocation_token_end_point
+
+Auth server, on logout, should proactively clean up the data!
+and app developer should sent this request to auth server to clean up this token on logout!
+
+========================================= SCOPES
+46. The Purpose of OAuth Scopes
+Scopes in OAuth tend to be one of the more confusing concepts, probably because the OAuth
+
+spec itself doesn't actually define any scopes.
+
+So what exactly is scope?
+
+In this section, we're going to talk about what scopes are, how to use them, how to define
+
+them for your own service, and how they tie into asking the user for permission.
+
+Scopes are essentially a way for an application to request access to limited parts of a
+
+user's account. If we didn't have scopes at all, then the OAuth exchange would result in
+
+the application having full access to the user's account.
+
+Any operation available in the API would be possible for the application to do on behalf
+
+of that user. Scopes let us segment out the access that an application gets.
+
+This way, an application can request access to read your data, but it wouldn't get access
+
+to be able to write data.
+
+You've probably seen this if you've connected any applications to your Google account.
+
+An application using the Google API has to request a limited number of scopes.
+
+So it may request access to read your contacts, but it wouldn't be able to upload to your
+
+Google Drive or send email as you.
+
+I also want to emphasize that scope is specifically a way for an application to *request*
+
+access. Whether or not that request is granted is a whole different story.
+
+So an application that knows what it wants to do will ask for the appropriate scopes.
+
+Those will then be surfaced to the user -- shown to the user so that the user knows what
+
+scopes will be granted when they approve the request.
+
+The access token that ends up being issued will then be associated with the limited
+
+scopes that were granted.
+
+So this is essentially a way to limit what an application can do within the context of
+
+what a user can do within a system.
+
+And it's really important to remember that this is not a way to actually implement groups
+
+or rules or a permission scheme within your API.
+
+This is specifically about granting applications limited access to the API.
+
+So you may have the concept of two different types of users, consumer users and your
+
+admin users. And those admin users will already have some sort of additional privileges
+
+within your system. For example, in a product catalog, your admin users may be able to
+
+add new entries into the catalog, but your consumer users will only be able to browse the
+
+catalog. Now that concept exists outside of the concept of OAuth scopes.
+
+OAuth scopes don't help you with this.
+
+What OAuth scopes do is it means that if you do have an admin user logging into an
+
+application, the admin user could grant that application limited access to their account,
+
+which means instead of granting the application permission to create entries in the
+
+catalog, that user could grant that application read only access to the catalog.
+
+So just to reiterate, scope's are a way for an application to request limited access to
+
+someone's account. You're going to have some other separate concept of permissions or
+
+groups or roles existing in your API already outside of the concept of OAuth scope.
+
+Scope in OAuth is not a way to build a permissions system.
+
+It's a way to limit what an access token can do within the context of what a user can
+
+already do. In the next lesson, we'll talk about tips for designing scopes for your API.
+
+--------------------------------
+eg
+LOGIN WITH GOOGLE
+
+https://auth.openai.com/authorize?audience=https%3A%2F%2Fapi.openai.com%2Fv1&auth0Client=eyJuYW1lIjoiYXV0aDAtc3BhLWpzIiwidmVyc2lvbiI6IjEuMjEuMCJ9&client_id=DRivsnm2Mu42T3KOpqdtwB3NYviHYzwD&device_id=450718e2-3c31-4c18-a39f-94c50e522496&ext-login-allow-phone=true&ext-use-new-phone-ui=true&issuer=https%3A%2F%2Fauth.openai.com&max_age=0&nonce=QllDZHdfYk9aQ2Rpc2p0S2Nuam9pQjcyRGg1a2dnWTM5ejd3RmtrOFUtRg%3D%3D&redirect_uri=https%3A%2F%2Fplatform.openai.com%2Fauth%2Fcallback&response_mode=query&response_type=code&scope=openid+profile+email+offline_access&state=MjJKbEliRGRaR1VyZ0VBWDZ2dzdscjhmVEhLWGZ3UU9LdFdMUU1Oa1VzSA%3D%3D&flow=treatment
+
+https://platform.openai.com/auth/callback?code=ac_ErEaJTkYXCESFTACMLUHZPiWxji_lmtpMJuKyce0L6M.kh74AcmX8aCYuZ1NHh5Q6gbywaoznp7YdQ8GP1c8x4k&scope=openid+profile+email+offline_access&state=S3FsQkwwclhPOVVZQzQ3MzdodFFyT1hhTk5ZM3NoZWlHeFdsRHNHQVg3WA%3D%3D
+
+
+--------------------------------

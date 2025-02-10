@@ -1,0 +1,42 @@
+======================= 4.2 CAP Theorem ======================= 
+
+A distributed system can provide at most TWO of the following three:
+Consistency (C) → Every read gets the latest write.
+Availability (A) → Every request gets a response.
+Partition Tolerance (P) → The system works even if network failures occur.
+
+System Type				Guarantees						Example
+CP (Consistency + Partition Tolerance)	Data is always correct, but might be unavailable.	Google Spanner
+
+AP (Availability + Partition Tolerance)	System remains available, but data might be stale.	Amazon DynamoDB
+
+CA (Consistency + Availability)		Can tolerate network failures. but CA is impossible	Traditional SQL databases
+
+=> CA (Consistency + Availability)
+In the context of the CAP theorem, CA refers to a system that guarantees both:
+1️⃣ Consistency: All nodes have the same data at the same time.
+2️⃣ Availability: The system is always operational and ready to serve requests.
+
+Logic of CA
+To achieve both Consistency and Availability:
+The system must rely on synchronous communication between nodes to ensure data consistency while remaining available for reads/writes.
+There can be no partitions (network splits) in the system, as partition tolerance (P) is sacrificed.
+
+Why CA Is Theoretically Impossible in a Partitioned System
+The CAP theorem states that you cannot achieve Consistency, Availability, and Partition Tolerance simultaneously in a distributed system.
+
+If there is a network partition (some nodes cannot communicate):
+
+To maintain Consistency, you must block some operations until the partition is resolved. This violates Availability.
+To maintain Availability, you must allow operations on isolated partitions, leading to inconsistent data.
+Thus, CA can only be achieved in systems where network partitions do not happen—essentially, systems that are not truly distributed or rely on perfect communication.
+
+Real-World Example of CA: Relational Databases
+Systems like traditional relational databases (MySQL, PostgreSQL) running on a single server provide Consistency and Availability, but they sacrifice Partition Tolerance.
+They work well in environments with no network splits or a single-node setup.
+
+Key Takeaways
+CA systems are consistent and available as long as there are no partitions.
+In distributed systems, ensuring CA is challenging because Partition Tolerance is essential.
+
+This is why most distributed systems prioritize either CP (e.g., databases like MongoDB in strong consistency mode) or AP (e.g., DynamoDB prioritizing availability).

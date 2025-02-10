@@ -1,0 +1,7 @@
+Raft & Paxos: Handling Network Splits in Distributed Systems
+When a network split (partition) happens, distributed systems need to decide who should remain the leader and how to prevent inconsistencies.
+
+Two of the most famous consensus algorithms used for this are:
+✅ Paxos – A highly fault-tolerant, complex algorithm used in distributed databases.
+✅ Raft – A simpler, more understandable alternative that is widely used in modern distributed systems.
+

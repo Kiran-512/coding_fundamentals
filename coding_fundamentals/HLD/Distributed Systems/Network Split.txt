@@ -1,0 +1,82 @@
+======================= Network Split ======================= 
+
+Network Split in Distributed Systems (Deep Dive)
+
+Network split is an issue
+where in two servers A and B were communicating with each other but this communication breaks
+and they operate indecently.
+
+Due to this issue, data inconsistency issues arises!
+So system can decide to either stay active giving the old and diff responses OR
+to go down in order to have the data synchronization!
+
+Real-World Example: Database Split-Brain
+💡 Example: Two Nodes Acting as Leaders
+
+Imagine a distributed database with two leader nodes (Node A and Node B).
+If the network splits, both nodes might think the other is down.
+Each node may accept writes separately, leading to data inconsistencies when the network heals.
+🔹 Consequences:
+✅ Some users write to Node A, others to Node B.
+❌ When the network recovers, we have two versions of the data!
+❌ This leads to data corruption and requires conflict resolution.
+
+How to Handle Network Split?
+✔ Leader Election Protocols – Use Raft or Paxos to ensure only one leader exists.
+✔ Quorum-Based Systems – Require a majority of nodes to agree before making changes.
+✔ Timeout & Failover – Detect failures quickly and reroute traffic.
+✔ Conflict Resolution – Use timestamps or vector clocks to merge conflicting data.
+
+A network split (also called a network partition) happens when a distributed system splits into two or more isolated groups due to a failure in the communication network.
+
+📌 Example:
+Imagine a banking system with servers in New York, London, and Singapore. If the network link between New York and London breaks, the system splits into two parts. Now, customers in New York and London might see different account balances because the servers can’t synchronize transactions.
+
+💡 Key Concept:
+
+Each partition continues operating independently.
+Data inconsistencies can arise because servers in different partitions don’t share updates.
+Resolving the split requires merging data back together when the network is restored.
+
+ Causes of a Network Split
+1️⃣ Hardware Failure → A router or switch fails, breaking communication.
+2️⃣ Software Bugs → A bug in networking software disconnects nodes.
+3️⃣ High Network Latency → A slow network prevents timely communication.
+4️⃣ Cloud Provider Issues → AWS, Azure, or Google Cloud experiences an outage.
+5️⃣ DDoS Attacks → Hackers overload a network, causing disconnections.
+6️⃣ Geographical Disruptions → Earthquakes or power outages affect network links.
+
+1️⃣ Hardware Failures – A broken network cable or router failure can isolate some nodes.
+2️⃣ Software Bugs – Misconfigured firewalls or routing rules can block network traffic.
+3️⃣ Overloaded Networks – Heavy traffic can lead to packet loss, causing nodes to become unreachable.
+4️⃣ Cloud Region Failures – In cloud environments, a data center region may become unreachable.
+5️⃣ DDoS Attacks – A distributed denial-of-service (DDoS) attack can make parts of the network unresponsive.
+
+📌 Example:
+In November 2020, Google Cloud had a network split that caused services like YouTube and Gmail to go down.
+Amazon Web Services (AWS) has availability zones to handle network splits.
+
+🔹 What Happens During a Network Split?
+1️⃣ Data Becomes Inconsistent
+Each partition keeps accepting requests independently.
+Updates in one partition don’t reach the other.
+📌 Example: Banking System
+
+A user transfers $500 from Account A to Account B.
+The request goes to a server in New York.
+A network split occurs before the update reaches London.
+In New York: Account A = $500, Account B = $1500 ✅
+In London: Account A = $1000, Account B = $1000 ❌ (Old balance remains)
+The system now has two different versions of reality!
+
+Requests Might Be Lost
+Some client requests never reach their destination.
+Users might see timeout errors.
+📌 Example: E-commerce System (Amazon)
+
+A customer places an order.
+The request goes to Partition A (Server 1).
+A network split happens before Server 1 confirms the order.
+The order doesn’t reach Partition B (Inventory System).
+The system never deducts stock, leading to overselling!
+
