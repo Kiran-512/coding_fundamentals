@@ -56,6 +56,7 @@
     <Compile Include="DSA\Tree\Construct Tree\PreOrder_Inorder.cs" />
     <Compile Include="DSA\Tree\Construct Tree\Tree.cs" />
     <Compile Include="DSA\Tree\Misc Problems\Misc.cs" />
+    <Content Include="DSA\Tree\Misc Problems\SameTree.cpp" />
     <Compile Include="DSA\Tree\Traversals\TreeTarversals.cs" />
     <Compile Include="DSA\Tree\TreeNode.cs" />
     <Compile Include="DSA\Tree\Views\TreeViews.cs" />
@@ -251,6 +252,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DSA\Heap\MaxHeap\heap.cpp" />
+    <Content Include="DSA\Tree\Misc Problems\ValidateBinarySearchTree.cpp" />
     <Content Include="LLD\Design Patterns\Behavioral Patterns\Mediator\Mediator.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Mediator1.txt</LastGenOutput>

@@ -99,5 +99,103 @@ namespace All.Design.Patterns.DSA.Tree.Construct_Tree.Traversals
         public static void VerticalTraversal(TreeNode root)
         {
         }
+        public static void InorderTraversalRec(TreeNode root, List<int> ans) // LPR
+        {
+            if (root == null) return;
+            InorderTraversalRec(root.left, ans);
+            ans.Add(root.val);
+            InorderTraversalRec(root.right, ans);
+        }
+
+        public static List<int> InorderTraversalIterative(TreeNode root)
+        {
+            if (root == null) return new List<int>();
+
+            List<int> ans = new List<int>();
+            Stack<TreeNode> st = new Stack<TreeNode>();
+            TreeNode it = root;
+
+            while (true)
+            {
+                while (it != null)
+                {
+                    st.Push(it);
+                    it = it.left;
+                }
+
+                if (st.Count == 0) break; // Exit condition
+
+                it = st.Pop();
+                ans.Add(it.val);
+                it = it.right;
+            }
+
+            return ans;
+        }
+        public static void PreorderTraversal(TreeNode root, List<int> ans)
+        {
+            if (root == null) return;
+            ans.Add(root.val);
+            PreorderTraversal(root.left, ans);
+            PreorderTraversal(root.right, ans);
+        }
+
+        public static List<int> PreorderTraversalIterative(TreeNode root)
+        {
+            List<int> ans = new List<int>();
+            if (root == null) return ans;
+
+            Stack<TreeNode> st = new Stack<TreeNode>();
+            st.Push(root);
+
+            while (st.Count > 0)
+            {
+                TreeNode node = st.Pop();
+                ans.Add(node.val);
+
+                if (node.right != null)
+                    st.Push(node.right);
+                if (node.left != null)
+                    st.Push(node.left);
+            }
+
+            return ans;
+        }
+        public static void PostorderTraversalRec(TreeNode root, List<int> ans)
+        {
+            if (root == null) return;
+            PostorderTraversalRec(root.left, ans);
+            PostorderTraversalRec(root.right, ans);
+            ans.Add(root.val);
+        }
+
+        public static List<int> PostorderTraversalIterative(TreeNode root)
+        {
+            if (root == null) return new List<int>();
+
+            List<int> ans = new List<int>();
+            Stack<TreeNode> s = new Stack<TreeNode>();
+            s.Push(root);
+
+            while (s.Count > 0)
+            {
+                TreeNode curr = s.Pop();
+                ans.Add(curr.val);
+
+                if (curr.left != null)
+                {
+                    s.Push(curr.left);
+                }
+                if (curr.right != null)
+                {
+                    s.Push(curr.right);
+                }
+            }
+
+            ans.Reverse(); // Reverse the list to get postorder traversal
+            return ans;
+        }
+
+
     }
 }
