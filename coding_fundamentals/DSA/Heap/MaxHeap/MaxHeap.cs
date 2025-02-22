@@ -23,7 +23,9 @@ namespace All.Design.Patterns.DSA.Heap.MaxHeap
                 int parentKaIndex = index / 2;
                 if (parentKaIndex >= 0 && arr[parentKaIndex] < arr[index])
                 {
-                    //swap(nums[index], nums[parentIndex]);
+                    int temp = arr[parentKaIndex];
+                    arr[parentKaIndex] = arr[index];
+                    arr[index] = temp;
                     index = parentKaIndex;
                 }
             }
@@ -48,15 +50,26 @@ namespace All.Design.Patterns.DSA.Heap.MaxHeap
                     int temp = arr[largestKaIndex];
                     arr[largestKaIndex] = arr[index];
                     arr[index] = temp;
-
                     index = largestKaIndex;
                 }
                 else break;
             }
         }
-        public void HeapSort()
+        public void HeapSort(int[] arr,int length)
         {
-
+            int size = length - 1;
+            for (int i = size / 2; i >= 1; i--)
+            {
+                HeapifyDown(i);
+            }
+            while (size > 1)
+            {
+                int temp = arr[1];
+                arr[1] = arr[size];
+                arr[size] = temp;
+                size--;
+                HeapifyDown(1);
+            }
         }
         public void Push(int value)
         {
@@ -69,29 +82,34 @@ namespace All.Design.Patterns.DSA.Heap.MaxHeap
                 int parentIndex = index / 2;
                 if (arr[parentIndex] > arr[index])
                 {
-                    int tempval = arr[parentIndex];
+                    int temp = arr[parentIndex];
                     arr[parentIndex] = arr[index];
-                    arr[index] = arr[parentIndex];
+                    arr[index] = temp;
+                    index = parentIndex;
                 }
                 else break;
             }
         }
         public int top()
         {
+            if (size < 2)//arr.Length < 2
+            {
+                return 0;//throw exception
+            }
             return arr[1];
         }
         public int pop()
         {
             if (arr.Length < 2)
             {
-                return 0;//trhow exception
+                return 0;//throw exception
             }
             int index = 1;
             int val = arr[index];
             arr[index] = arr[size];
             size--;
 
-            while (index < size)
+            while(true) 
             {
                 int leftChild = index * 2;
                 int rightChild = index * 2 + 1;
@@ -110,20 +128,13 @@ namespace All.Design.Patterns.DSA.Heap.MaxHeap
                 }
                 else
                 {
-                    //todo:
-                    //swap
+                    int temp = arr[index];
+                    arr[index] = arr[maxKaIndex];
+                    arr[maxKaIndex] = temp;
                     index = maxKaIndex;
                 }
             }
             return val;
-        }
-        public void heapifyRec()
-        {
-
-        }
-        public void heapSort()
-        {
-
         }
     }
 }
