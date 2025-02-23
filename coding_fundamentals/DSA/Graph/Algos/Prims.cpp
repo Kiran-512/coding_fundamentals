@@ -8,7 +8,7 @@ int getMinValueNode(vector<int> &key, vector<bool> &mstSet)
 {
     int min = INT_MAX;
     int index = -1;
-    for (int i = 0; i < key.size(); v++)
+    for (int i = 0; i < key.size(); i++)
         if (!mstSet[i] && key[i] < min)
             min = key[i], index = i;
     return index;
@@ -23,7 +23,24 @@ void printMST(vector<int> &parent, vector<vector<int>> &adj, int V)
     }
 }
 
-void primMST(vector<vector<pair<int, int>>> &adj, int V)
+int getMSTSum(vector<int> &parent, vector<vector<pair<int, int>>> &adj)
+{
+    int sum = 0;
+    for (int u = 0; u < parent.size(); ++u)
+    {
+        if (parent[u] == -1) continue;
+        for (auto edge : adj[u])
+        {
+            int v = edge.first;
+            int w = edge.second;
+            if (v == parent[u])
+                sum += w;
+        }
+    }
+    return sum;
+}
+
+void primMST(unordered_map<int, list<pair<int, int>>> &adj, int V)
 {
     vector<int> key(V, INT_MAX);
     vector<bool> mstSet(V, false);
@@ -51,14 +68,18 @@ void primMST(vector<vector<pair<int, int>>> &adj, int V)
             }
         }
     }
+
+    int mstSum = getMSTSum(parent, adj);
+    cout << "Sum of weights of MST is: " << mstSum << endl;
     printMST(parent, adj, V);
 }
 
 int main()
 {
     int V = 5;
-    vector<vector<pair<int, int>>> adj(V);
-
+    // Define the adjacency list using an unordered_map
+    unordered_map<int, list<pair<int, int>>> adjList;
+    // Add edges to the adjacency list
     adj[0].push_back({1, 2});
     adj[0].push_back({3, 6});
     adj[1].push_back({0, 2});
@@ -74,7 +95,7 @@ int main()
     adj[4].push_back({2, 7});
     adj[4].push_back({3, 9});
 
-    primMST(adj, V);
+    primMST(adjList, V);
 
     return 0;
 }

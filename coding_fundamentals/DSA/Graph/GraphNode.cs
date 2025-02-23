@@ -305,6 +305,13 @@ namespace All.Design.Patterns.DSA.Graph
             }
             return ans;
         }
+        /// <summary>
+        /// Computes the shortest path from a single source node to all other nodes in a Directed Acyclic Graph (DAG) using Depth-First Search (DFS) and topological sorting.
+        /// </summary>
+        /// <param name="src">The source node from which the shortest paths are calculated. This node should have an in-degree of 0.</param>
+        /// <remarks>
+        /// This method first finds the topological order of the nodes using DFS. Then, it iterates over the nodes in topological order to compute the shortest path to each node from the source node.
+        /// </remarks>
         public void DFSShortedPath(int src)//single source shorted path algo : shorted path of all nodes from a single source node
         
         {
@@ -355,8 +362,23 @@ namespace All.Design.Patterns.DSA.Graph
         {
             if (V <= 0)
             {
-                V = adjWeightNodeList.Count;
+                V = adjWeightNodeList.Count;//if V is not provided then take the count of the nodes in the graph, but is this correct, what if the graph is not connected, what few nodes do not have any edge and they have edge with other nodes in case of directed graph
             }
+            //for directed graph, with 5 nodes all four pointing to one node then input will be as below
+            //0->1, 0->2, 0->3, 0->4 
+            //in this case the V will be 5 but the adjWeightNodeList will have only 1 node with 4 edges 
+            //so we need to take care of this case
+            //and count to be used only in case if input is vector<vector<int>> adjWeightNodeList where adjWeightNodeList [0] is the neighbour nodes of 0th node
+            //  adjWeightNodeList [1] for above example will be empty
+            //  adjWeightNodeList [2] for above example will be empty
+            //  adjWeightNodeList [3] for above example will be empty
+            //  adjWeightNodeList [4] for above example will be empty
+            // so count becomes 5 so the adjWeightNodeList will have 5 entires as below
+            //at 0 index -> 1,2,3,4
+            //at 1 index -> empty
+            //at 2 index -> empty
+            //at 3 index -> empty
+            //at 4 index -> empty
 
             //using hashset to make sure I get the node with the smallest distance on top of the stack
             SortedSet<KeyValuePair<int, int>> set = new SortedSet<KeyValuePair<int, int>>();
@@ -366,23 +388,23 @@ namespace All.Design.Patterns.DSA.Graph
             List<int> distance = Enumerable.Repeat(int.MaxValue, V).ToList();
 
             //add the soruce in the list
-            var pair = new KeyValuePair<int, int>(0, src);
-            set.Add(pair);
+            var u = new KeyValuePair<int, int>(0, src);
+            set.Add(u);
 
             while (set.Count > 0)
             {
-                pair = set.Min;
-                set.Remove(pair);// remove that pair because we now have min disntace upto the this node from all toher nodes from the source
+                u = set.Min;
+                set.Remove(u);// remove that pair because we now have min disntace upto the this node from all toher nodes from the source
 
-                foreach (var child in adjWeightNodeList[pair.Value])
+                foreach (var v in adjWeightNodeList[u.Value])
                 {
-                    if (distance[pair.Value] + child.Key < distance[child.Value])
+                    if (distance[u.Value] + v.Key < distance[v.Value])
                     {
-                        set.Remove(child);
+                        set.Remove(new KeyValuePair<int, int>(distance[v.Value], v.Value));
 
-                        distance[child.Value] = distance[pair.Value] + child.Key;
+                        distance[v.Value] = distance[u.Value] + v.Key;
 
-                        set.Add(new KeyValuePair<int, int>(distance[child.Key], child.Value));
+                        set.Add(new KeyValuePair<int, int>(distance[v.Key], v.Value));
                     }
                 }
             }
