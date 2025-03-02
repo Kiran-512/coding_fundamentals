@@ -541,12 +541,12 @@ public:
                 end = end->next;
                 count++;
             }
-            if (!end)
+            if (!end) // because we have to reverse the linked list in group of k nodes and if we have less than k nodes then we don't have to reverse the linked list
             {
                 break;
             }
             ListNode *next = end->next;
-            end->next = nullptr;
+            end->next = nullptr; // breaking the linked list so that we can reverse the linked list from start to end i.e k nodes
             prev->next = reverse(start);
             start->next = next;
             prev = start;
@@ -617,21 +617,68 @@ public:
         ListNode *dummy = new ListNode(0);
         dummy->next = head;
         ListNode *prev = dummy;
-        for (int i = 0; i < m - 1; i++)
+        int i = 0;
+        while (i < m - 1) // traverse till m-1
         {
             prev = prev->next;
+            i++;
         }
+        // prev is at m-1 i.e at node 2
         ListNode *start = prev->next;
         ListNode *then = start->next;
-        for (int i = 0; i < n - m; i++)
+        int index = m;
+        while (index < n) // here we are reversing the linked list from m to n
         {
             start->next = then->next;
             then->next = prev->next;
             prev->next = then;
             then = start->next;
+            index++;
         }
         return dummy->next;
     }
+
+    // Method to perform insertion sort on the linked list
+    // ye simple hai insertion sort
+    // eseme karo jaise array me karte hai
+    // 1. create a dummy node
+    // 2. traverse the linked list
+    // 3. insert the node at the correct position matlab find the node from the dummy node jiska value curr->val se chota hai
+    ListNode *insertionSortList(ListNode *head)
+    {
+        ListNode *dummy = new ListNode(0);
+        ListNode *curr = head;
+        while (curr)// jab tak curr hai tab tak chalao
+        {
+            ListNode *prev = dummy;                           // use this pointer to insert the node at the correct position
+            ListNode *next = curr->next;                      // this one to keep the track of the next node so that we can move to the next node to comapre the value and then insert the node at the correct position
+            while (prev->next && prev->next->val < curr->val) // sorted list k node ki value curr->val se choti hai tab tak traverse skaro
+            {
+                prev = prev->next;
+            }
+            curr->next = prev->next;
+            prev->next = curr;
+            curr = next;
+        }
+        return dummy->next;
+    }
+
+    // insertion sort alogwrithm
+    // Example : 1->4->2->3->5->6->7->8->9->10, output: 10->9->8->7->6->5->4->3->2->1
+    // algo steps
+    // pehle 10 ko sorted list me insert karo kyunki 10 is the last element
+    // fir 9 ko sorted list me insert karo
+    // fir 8 ko sorted list me insert karo
+    // fir 7 ko sorted list me insert karo
+    // aise hi chalta rahega jab tak linked list khatam nahi ho jata
+
+    // standard steps
+    //  1. create a new linked list
+    //  2. traverse the linked list
+    //  3. insert the node in the new linked list
+    //  4. return the new linked list
+
+    // Method to reorder the linked list such that all odd nodes come before the even nodes
 };
 
 // methods to implment in singly linked list
@@ -665,3 +712,6 @@ public:
 //  28. oddEvenList
 //  29. deleteNodesWithGreaterValueOnRight
 //  30. addTwoNumbersII
+//  31. reverseAlternateKNodes
+//  32. reverseAlternateKNodesRecursive
+//  33. reverseKNodes
